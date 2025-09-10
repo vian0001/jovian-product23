@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menyeting Gateway dan Default Route di MikroTik</title>
+    <style>
+
+            /* Styling untuk container gambar */
+
+    .image-container {
+      margin: 30px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s ease;
+      max-width: 100%;
+      position: relative;
+    }
+
+    .image-container:hover {
+      transform: scale(1.02);
+      box-shadow: 0 15px 40px rgba(37, 99, 235, 0.4);
+    }
+
+    .image-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: all 0.4s ease;
+    }
+
+    .image-container:hover img {
+      filter: brightness(1.1);
+    }
+
+    .image-caption {
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7), transparent);
+      padding: 15px 20px;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .image-container:hover .image-caption {
+      transform: translateY(0);
+    }
+
+    @keyframes loadProgress { 0% { width: 0%; } 100% { width: 100%; } }
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+    {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+ 
+        /* Portfolio Button Styling */
+.portfolio-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: var(--text-primary);
+    border: none;
+    border-radius: 50px;
+    padding: 15px 25px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(37, 99, 235, 0.4);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.portfolio-button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.6);
+}
+
+.portfolio-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+    animation: shineEffect 3s infinite;
+}
+
+.portfolio-icon {
+    font-size: 1.2rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes shineEffect {
+    0% { left: -100%; }
+    20% { left: 100%; }
+    100% { left: 100%; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.attention-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    border: 2px solid var(--accent-color);
+    animation: ripple 2s infinite;
+    opacity: 0;
+}
+
+@keyframes ripple {
+    0% {
+        width: 100%;
+        height: 100%;
+        opacity: 0.8;
+    }
+    100% {
+        width: 200%;
+        height: 200%;
+        opacity: 0;
+    }
+}
+
+
+
+  {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --primary-color: #2563eb;
+        --secondary-color: #1e40af;
+        --accent-color: #06b6d4;
+        --success-color: #059669;
+        --warning-color: #d97706;
+        --danger-color: #dc2626;
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --bg-card: #334155;
+        --bg-light: #f8fafc;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border-color: #475569;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        color: var(--text-primary);
+        line-height: 1.6;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* Tech Background Pattern */
+    .tech-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -3;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(220, 38, 38, 0.08) 0%, transparent 50%);
+    }
+
+    .circuit-pattern {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        opacity: 0.03;
+        background-image: 
+            linear-gradient(90deg, var(--primary-color) 1px, transparent 1px),
+            linear-gradient(var(--primary-color) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: circuitMove 20s linear infinite;
+    }
+
+    @keyframes circuitMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+
+    /* Floating particles */
+    .tech-particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--accent-color);
+        border-radius: 50%;
+        opacity: 0.6;
+        animation: float linear infinite;
+    }
+
+    @keyframes float {
+        0% { 
+            transform: translateY(100vh) translateX(0px);
+            opacity: 0;
+        }
+        10% { 
+            opacity: 0.6;
+        }
+        90% { 
+            opacity: 0.6;
+        }
+        100% { 
+            transform: translateY(-100px) translateX(100px);
+            opacity: 0;
+        }
+    }
+
+    /* Header */
+    .header {
+        text-align: center;
+        padding: 100px 20px 80px;
+        background: linear-gradient(135deg, 
+            rgba(37, 99, 235, 0.1) 0%, 
+            rgba(6, 182, 212, 0.1) 50%, 
+            rgba(5, 150, 105, 0.1) 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent,
+            rgba(37, 99, 235, 0.1),
+            transparent
+        );
+        animation: headerScan 10s linear infinite;
+    }
+
+    @keyframes headerScan {
+        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .main-title {
+        font-family: 'Inter', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--success-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+        text-shadow: 0 0 50px rgba(37, 99, 235, 0.3);
+        animation: titleGlow 4s ease-in-out infinite alternate;
+        position: relative;
+    }
+
+    @keyframes titleGlow {
+        0% { filter: brightness(1); }
+        100% { filter: brightness(1.2); }
+    }
+
+    .subtitle {
+        font-size: 1.3rem;
+        color: var(--text-secondary);
+        margin-bottom: 40px;
+        font-weight: 300;
+        letter-spacing: 1px;
+    }
+
+    .author-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        animation: cardFloat 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes cardFloat {
+        0% { transform: translateY(0px); }
+        100% { transform: translateY(-10px); }
+    }
+
+    .card-header {
+        text-align: center;
+        font-size: 1.1rem;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .author-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        text-align: left;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: var(--primary-color);
+        min-width: 80px;
+        margin-right: 15px;
+    }
+
+    .info-value {
+        color: var(--text-primary);
+        font-weight: 400;
+    }
+
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 60px 20px;
+    }
+
+    /* Section styling */
+    .section {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.05) 0%, 
+            rgba(255, 255, 255, 0.02) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 40px;
+        margin: 40px 0;
+        position: relative;
+        backdrop-filter: blur(20px);
+        transition: all 0.4s ease;
+        animation: sectionSlide 0.8s ease-out;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .section:nth-child(even) {
+        animation: sectionSlideRight 0.8s ease-out;
+    }
+
+    @keyframes sectionSlide {
+        from { transform: translateX(-50px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes sectionSlideRight {
+        from { transform: translateX(50px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    .section:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 12px 48px rgba(37, 99, 235, 0.2);
+        transform: translateY(-8px);
+    }
+
+    .section-title {
+        font-family: 'Inter', sans-serif;
+        color: var(--primary-color);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 30px;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        border-radius: 2px;
+    }
+
+    /* Sub-section titles */
+    .subsection-title {
+        font-family: 'Inter', sans-serif;
+        color: var(--accent-color);
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        position: relative;
+        padding-left: 20px;
+    }
+
+    .subsection-title::before {
+        content: '—'; /* Simple dash or similar indicator */
+        position: absolute;
+        left: 0;
+        color: var(--accent-color);
+    }
+
+    /* Code blocks with typing effect */
+    .code-terminal {
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        margin: 25px 0;
+        font-family: 'JetBrains Mono', monospace;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+   .code-terminal {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 25px 0;
+    font-family: 'JetBrains Mono', monospace;
+    position: relative;
+
+    /* Tambahan ini */
+    max-height: 300px;        /* batas tinggi agar kalau kepenuhan muncul scrollbar */
+    overflow-y: auto;         /* scroll ke bawah */
+    overflow-x: auto;         /* scroll ke samping */
+    white-space: nowrap;      /* jangan dipaksa wrap ke bawah, biar tetap satu baris */
+}
+
+.code-line {
+    color: var(--text-primary);
+    margin: 10px 0;
+    position: relative;
+    padding-left: 20px;
+    width: max-content;       /* biar baris panjang nggak dipotong */
+}
+
+    .code-line.typing {
+        opacity: 1;
+        border-right: 4px solid var(--accent-color);
+        animation: blink-cursor 1s infinite;
+    }
+
+    .code-line.typed {
+        opacity: 2;
+        border-right: none;
+    }
+
+    @keyframes blink-cursor {
+        0%, 50% { border-color: var(--accent-color); }
+        51%, 100% { border-color: transparent; }
+    }
+
+    .code-line:hover {
+        background: rgba(37, 99, 235, 0.1);
+        padding-left: 25px;
+        border-radius: 6px;
+    }
+
+    .code-line::before {
+        content: '▶';
+        position: absolute;
+        left: 0;
+        color: var(--accent-color);
+        font-size: 0.8rem;
+    }
+
+    .comment {
+        color: var(--text-muted);
+        font-style: italic;
+    }
+
+    .string {
+        color: var(--warning-color);
+        font-weight: 400;
+    }
+
+    .keyword {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    /* Alert boxes */
+    .tech-alert {
+        background: linear-gradient(135deg, 
+            rgba(37, 99, 235, 0.1), 
+            rgba(6, 182, 212, 0.1));
+        border: 1px solid var(--primary-color);
+        border-left: 4px solid var(--primary-color);
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+        position: relative;
+        animation: alertPulse 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes alertPulse {
+        0% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.2); }
+        100% { box-shadow: 0 0 30px rgba(37, 99, 235, 0.4); }
+    }
+
+    .tech-alert::before {
+        content: '🔧 TEKNOLOGI INFO';
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--bg-primary);
+        color: var(--primary-color);
+        padding: 5px 15px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 20px;
+        border: 1px solid var(--primary-color);
+    }
+
+    .security-alert {
+        background: linear-gradient(135deg, 
+            rgba(220, 38, 38, 0.1), 
+            rgba(217, 119, 6, 0.1));
+        border: 1px solid var(--danger-color);
+        border-left: 4px solid var(--danger-color);
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+        position: relative;
+        animation: securityBlink 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes securityBlink {
+        0% { border-left-color: var(--danger-color); }
+        100% { border-left-color: var(--warning-color); }
+    }
+
+    .security-alert::before {
+        content: '🛡 KEAMANAN';
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--bg-primary);
+        color: var(--danger-color);
+        padding: 5px 15px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 20px;
+        border: 1px solid var(--danger-color);
+    }
+
+    .conclusion-box {
+        background: linear-gradient(135deg, 
+            rgba(5, 150, 105, 0.1), 
+            rgba(37, 99, 235, 0.1));
+        border: 1px solid var(--success-color);
+        border-left: 4px solid var(--success-color);
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+        position: relative;
+        animation: conclusionGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes conclusionGlow {
+        0% { box-shadow: 0 0 20px rgba(5, 150, 105, 0.2); }
+        100% { box-shadow: 0 0 30px rgba(5, 150, 105, 0.4); }
+    }
+
+    .conclusion-box::before {
+        content: '📝 KESIMPULAN';
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--bg-primary);
+        color: var(--success-color);
+        padding: 5px 15px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 20px;
+        border: 1px solid var(--success-color);
+    }
+
+    /* Bibliography */
+    .bibliography {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.08), 
+            rgba(255, 255, 255, 0.04));
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+        margin-top: 60px;
+        backdrop-filter: blur(20px);
+        animation: biblioFade 1.5s ease-out;
+    }
+
+    @keyframes biblioFade {
+        from { opacity: 0; transform: translateY(50px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bibliography h3 {
+        color: var(--accent-color);
+        font-family: 'Inter', sans-serif;
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .bibliography ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .bibliography li {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        line-height: 1.8;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+        position: relative;
+        padding-left: 50px;
+    }
+
+    .bibliography li::before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        font-size: 1.2rem;
+    }
+
+    .bibliography li:hover {
+        color: var(--text-primary);
+        transform: translateX(10px);
+        border-color: var(--primary-color);
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(6, 182, 212, 0.05));
+    }
+
+    .bibliography a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        word-break: break-all;
+    }
+
+    .bibliography a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+    }
+
+    /* Progress bar */
+    .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--success-color));
+        z-index: 1000;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .main-title {
+            font-size: 2.5rem;
+        }
+        
+        .section {
+            padding: 25px 20px;
+            margin: 30px 0;
+        }
+        
+        .container {
+            padding: 40px 15px;
+        }
+
+        .code-terminal {
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        .author-info {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Smooth animations */
+    .fade-in {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+img, a {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+</style>
+
+<!-- Portfolio Button -->
+<a href="https://jovian-portofolio02.vercel.app/" target="_blank" class="portfolio-button">
+    <span class="portfolio-icon">🚀</span>
+    Lihat Portfolio Saya
+    <div class="attention-ripple"></div>
+</a>
+
+<!-- Tech Background -->
+<div class="tech-bg"></div>
+<div class="circuit-pattern"></div>
+<div class="tech-particles" id="techParticles"></div>
+
+<!-- Header -->
+<div class="header">
+    <h1 class="main-title">MIKROTIK ROUTEROS</h1>
+    <div class="subtitle">Menerapkan Firewall NAT dan Mengamankan Jaringan</div>
+    <div class="subtitle">Konfigurasi proteksi jaringan dengan teknologi Network Address Translation</div>
+    
+    <div class="author-card">
+        <div class="card-header">Informasi Penulis</div>
+        <div class="author-info">
+            <div class="info-item">
+                <span class="info-label">Penulis:</span>
+                <span class="info-value">Jovian Ekasakta</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Guru:</span>
+                <span class="info-value">Arief Wahyudin</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Kelas:</span>
+                <span class="info-value">XI TJKT 03</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Sekolah:</span>
+                <span class="info-value">Dwija Bhakti 01 Jombang</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <div class="section fade-in">
+            <h2 class="section-title"># topologi yang digunakan</h2>
+
+
+
+                                                <div class="image-container">
+          <img src="topologi.png" alt="SERVICE IP pada MikroTik RouterOS">
+          <div class="image-caption">Tampilan topologi di gns3</div>
+        </div>
+
+        </div>
+
+<div class="container">
+    <!-- Section: Pengenalan Network Address Translation (NAT) -->
+    <div class="section fade-in">
+        <h2 class="section-title">1. PENGENALAN NETWORK ADDRESS TRANSLATION (NAT)</h2>
+
+                                                                <div class="image-container">
+          <img src="no  (1).png" alt="PENGENALAN NETWORK ADDRESS TRANSLATION (NAT)">
+          <div class="image-caption"> PENGENALAN NETWORK ADDRESS TRANSLATION (NAT)</div>
+                                                </div>
+
+        
+        <h3 class="subsection-title">Pengertian dan Tujuan NAT</h3>
+        <p>Dari sumber MikroTik Documentation (2024), Network Address Translation (NAT) adalah teknik jaringan yang memungkinkan perangkat pada jaringan lokal (LAN) untuk mengakses internet menggunakan satu alamat IP publik. NAT mengganti alamat IP sumber dari paket data yang dikirim oleh LAN ke alamat IP publik router. Bersama dengan filtering paket, NAT berfungsi sebagai alat untuk mencegah akses tidak sah ke jaringan dan router itu sendiri, serta sebagai filter untuk lalu lintas keluar.</p>
+        
+        <p>Dari sumber MKController (2024), NAT pada MikroTik diimplementasikan dalam menu IP > Firewall. Untuk mengonfigurasi NAT, Anda perlu membuat aturan NAT yang terdiri dari tiga bidang utama: Chain (menunjukkan arah lalu lintas yang akan diterapkan aturan), Action (tindakan yang akan dilakukan pada paket yang cocok dengan aturan), dan parameter tambahan seperti alamat IP sumber/tujuan dan antarmuka jaringan.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Melihat semua aturan NAT yang ada</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat print</span></div>
+            <div class="code-line">Flags: X - disabled, I - invalid, D - dynamic </div>
+            <div class="code-line"> 0   chain=srcnat action=masquerade out-interface=ether1 log=no log-prefix=""</div>
+        </div>
+
+        <h3 class="subsection-title">Jenis-jenis NAT</h3>
+        <p>Dari sumber Wiki MikroTik (2024), terdapat dua jenis utama NAT:</p>
+        
+        <p>Dari sumber MikroTik Documentation (2024), Source NAT (srcnat) adalah jenis NAT yang dilakukan pada paket yang berasal dari jaringan yang di-NAT. Router NAT mengganti alamat sumber pribadi dari paket IP dengan alamat IP publik baru saat melewati router. Operasi sebaliknya diterapkan pada paket balasan yang berjalan ke arah lain. Source NAT umumnya digunakan untuk "menyembunyikan" jaringan lokal di balik alamat IP publik.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Contoh konfigurasi Source NAT dengan IP statis</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">srcnat</span> src-address=<span class="string">192.168.0.0/24</span> action=<span class="string">src-nat</span> to-addresses=<span class="string">203.0.113.10</span> out-interface=<span class="string">ether1</span></div>
+        </div>
+        
+        <p>Dari sumber MikroTik Documentation (2024), Destination NAT (dstnat) adalah jenis NAT yang dilakukan pada paket yang ditujukan ke jaringan yang di-NAT. Ini paling umum digunakan untuk membuat host di jaringan pribadi dapat diakses dari Internet. Router NAT yang melakukan dstnat mengganti alamat IP tujuan dari paket IP saat berjalan melalui router menuju jaringan pribadi.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Contoh konfigurasi Destination NAT untuk server web internal</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">dstnat</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">80</span> in-interface=<span class="string">ether1</span> action=<span class="string">dst-nat</span> to-addresses=<span class="string">192.168.0.10</span> to-ports=<span class="string">80</span></div>
+        </div>
+        
+        <div class="tech-alert">
+            <p>NAT bukan hanya memungkinkan banyak perangkat di jaringan lokal berbagi satu alamat IP publik, tetapi juga memberikan lapisan keamanan tambahan dengan menyembunyikan alamat IP internal dari jaringan eksternal. Namun, perlu diingat bahwa host di balik router dengan NAT tidak memiliki konektivitas end-to-end yang sebenarnya, sehingga beberapa protokol Internet mungkin tidak berfungsi dalam skenario dengan NAT.</p>
+        </div>
+        
+        <div class="conclusion-box">
+            <strong>Kesimpulan:</strong> Dari 2 pendapat tersebut dapat disimpulkan bahwa Network Address Translation (NAT) pada MikroTik adalah teknik penting yang memungkinkan perangkat jaringan lokal mengakses internet melalui satu alamat IP publik, sambil menyediakan lapisan keamanan tambahan. Dua jenis utama NAT - Source NAT dan Destination NAT - masing-masing memiliki tujuan spesifik dan diterapkan pada rantai firewall yang berbeda di RouterOS MikroTik.
+        </div>
+    </div>
+
+    <!-- Section: Konfigurasi Source NAT untuk Akses Internet -->
+    <div class="section fade-in">
+        <h2 class="section-title">2. KONFIGURASI SOURCE NAT UNTUK AKSES INTERNET</h2>
+
+                                                        <div class="image-container">
+          <img src="no  (2)-ink.jpeg" alt="KONFIGURASI SOURCE NAT UNTUK AKSES INTERNET">
+          <div class="image-caption"> KONFIGURASI SOURCE NAT UNTUK AKSES INTERNET</div>
+                                                </div>
+
+        
+        <h3 class="subsection-title">Persiapan Konfigurasi</h3>
+        <p>Dari sumber UKHost4U (2025), sebelum mengkonfigurasi NAT, penting untuk mengidentifikasi dan menamai antarmuka jaringan dengan benar. Antarmuka yang terhubung ke internet biasanya disebut WAN, sedangkan antarmuka untuk jaringan lokal disebut LAN. Langkah ini mempermudah pengelolaan dan pemecahan masalah di masa mendatang.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Melihat semua antarmuka jaringan yang tersedia</div>
+            <div class="code-line"><span class="keyword">/interface print</span></div>
+            <div class="code-line">Flags: X - disabled, R - running, S - slave </div>
+            <div class="code-line"> #   NAME        TYPE        ACTUAL-MTU L2MTU  MAX-L2MTU MAC-ADDRESS       LAST-LINK-UP LAST-LINK-DOWN</div>
+            <div class="code-line"> 0 R ether1      ether            1500        1526    1580    D4:CA:6D:XX:XX:XX sep/08/2025...</div>
+            <div class="code-line"> 1 R ether2      ether            1500        1526    1580    D4:CA:6D:YY:YY:YY sep/08/2025...</div>
+            <div class="code-line comment"># Mengubah nama antarmuka untuk memudahkan identifikasi</div>
+            <div class="code-line"><span class="keyword">/interface set</span> 0 name=<span class="string">WAN</span></div>
+            <div class="code-line"><span class="keyword">/interface set</span> 1 name=<span class="string">LAN</span></div>
+        </div>
+        
+        <p>Dari sumber MikroTik Documentation (2024), sebelum menerapkan aturan NAT, pastikan alamat IP dikonfigurasi dengan benar pada kedua antarmuka. Antarmuka WAN harus memiliki alamat IP publik (atau IP yang diberikan oleh ISP), sementara antarmuka LAN memiliki alamat IP privat yang akan digunakan oleh jaringan lokal.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Mengkonfigurasi alamat IP pada antarmuka</div>
+            <div class="code-line"><span class="keyword">/ip address add</span> address=<span class="string">203.0.113.10/24</span> interface=<span class="string">WAN</span></div>
+            <div class="code-line"><span class="keyword">/ip address add</span> address=<span class="string">192.168.0.1/24</span> interface=<span class="string">LAN</span></div>
+            <div class="code-line comment"># Memeriksa konfigurasi alamat IP</div>
+            <div class="code-line"><span class="keyword">/ip address print</span></div>
+            <div class="code-line">Flags: X - disabled, I - invalid, D - dynamic </div>
+            <div class="code-line"> #   ADDRESS            NETWORK         INTERFACE</div>
+            <div class="code-line"> 0   203.0.113.10/24    203.0.113.0     WAN</div>
+            <div class="code-line"> 1   192.168.0.1/24     192.168.0.0     LAN</div>
+        </div>
+
+        <h3 class="subsection-title">Implementasi Masquerade</h3>
+        <p>Dari sumber MikroTik Documentation (2024), Masquerade adalah subversi unik dari action=srcnat, yang dirancang khusus untuk digunakan dalam situasi ketika IP publik dapat berubah secara acak, misalnya ketika server DHCP mengubahnya, atau tunnel PPPoE setelah terputus mendapatkan IP yang berbeda. Setiap kali antarmuka terputus dan/atau alamat IP-nya berubah, router akan menghapus semua entri pelacakan koneksi yang dimasquerade yang mengirimkan paket keluar dari antarmuka tersebut, sehingga meningkatkan waktu pemulihan sistem setelah perubahan alamat IP publik.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Menambahkan aturan masquerade untuk jaringan lokal</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">srcnat</span> action=<span class="string">masquerade</span> out-interface=<span class="string">WAN</span> comment=<span class="string">"Masquerade jaringan lokal"</span></div>
+            <div class="code-line comment"># Memeriksa aturan NAT yang telah dibuat</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat print</span></div>
+            <div class="code-line">Flags: X - disabled, I - invalid, D - dynamic </div>
+            <div class="code-line"> 0   chain=srcnat action=masquerade out-interface=WAN comment="Masquerade jaringan lokal" log=no log-prefix=""</div>
+        </div>
+        
+        <p>Dari sumber BuildingAdvancedFirewall (2024), dalam sebagian besar kasus, disarankan untuk menggunakan src-nat daripada masquerade. Namun, dalam kasus alamat WAN yang dinamis, masquerade adalah satu-satunya pilihan. Penting juga untuk memperhatikan bahwa jika Anda menggunakan tunnel IPsec, lalu lintas IPsec harus dikecualikan dari NAT dengan menambahkan aturan yang menerima semua paket yang cocok dengan kebijakan IPsec.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Menambahkan pengecualian untuk lalu lintas IPsec</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">srcnat</span> action=<span class="string">accept</span> ipsec-policy=<span class="string">out,ipsec</span> comment=<span class="string">"Kecualikan lalu lintas IPsec dari NAT"</span></div>
+            <div class="code-line comment"># Pindahkan aturan IPsec ke posisi pertama</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat move</span> 1 destination=<span class="string">0</span></div>
+        </div>
+
+        <h3 class="subsection-title">Implementasi Source NAT dengan IP Statis</h3>
+        <p>Dari sumber Wiki MikroTik (2024), jika Anda memiliki beberapa alamat IP publik, source NAT dapat diubah ke IP tertentu. Misalnya, satu subnet lokal dapat disembunyikan di balik IP pertama dan subnet lokal kedua dimasquerade di balik IP kedua.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Menambahkan source NAT untuk subnet tertentu dengan IP publik tertentu</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">srcnat</span> src-address=<span class="string">192.168.1.0/24</span> action=<span class="string">src-nat</span> to-addresses=<span class="string">203.0.113.10</span> out-interface=<span class="string">WAN</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">srcnat</span> src-address=<span class="string">192.168.2.0/24</span> action=<span class="string">src-nat</span> to-addresses=<span class="string">203.0.113.11</span> out-interface=<span class="string">WAN</span></div>
+        </div>
+        
+        <div class="security-alert">
+            <p>Ketika mengubah atau menambahkan aturan NAT, tabel pelacakan koneksi harus dihapus, jika tidak aturan NAT mungkin tampak tidak berfungsi dengan benar sampai entri koneksi kedaluwarsa. Gunakan perintah /ip firewall connection flush untuk membersihkan tabel koneksi setelah melakukan perubahan besar pada konfigurasi NAT.</p>
+        </div>
+        
+        <div class="conclusion-box">
+            <strong>Kesimpulan:</strong> Dari 3 pendapat tersebut dapat disimpulkan bahwa konfigurasi Source NAT untuk akses internet pada MikroTik memerlukan identifikasi dan pengaturan antarmuka yang tepat, konfigurasi alamat IP yang benar, dan implementasi aturan NAT yang sesuai dengan kebutuhan jaringan. Masquerade adalah pilihan ideal untuk koneksi dengan IP dinamis, sementara src-nat lebih cocok untuk skenario dengan IP statis, terutama jika ingin menerapkan NAT yang berbeda untuk subnet yang berbeda.
+        </div>
+    </div>
+
+    <!-- Section: Implementasi Destination NAT untuk Layanan Internal -->
+    <div class="section fade-in">
+        <h2 class="section-title">3. IMPLEMENTASI DESTINATION NAT UNTUK LAYANAN INTERNAL</h2>
+        
+        <h3 class="subsection-title">Prinsip Dasar Destination NAT</h3>
+        <p>Dari sumber MikroTik Documentation (2024), Destination NAT (DNAT) adalah metode yang memungkinkan akses dari internet ke server di jaringan lokal. Dalam implementasinya, router melakukan penerjemahan alamat tujuan, mengubah alamat tujuan dari paket yang masuk ke alamat internal server di jaringan lokal. Teknik ini biasanya digunakan untuk membuat layanan seperti web server, server FTP, atau sistem kamera IP dapat diakses dari internet.</p>
+        
+        <p>Dari sumber Forum MikroTik (2024), semua aturan destination NAT, di mana kita tahu (dan dapat membatasi alamat sumber WAN) siapa yang memerlukan akses, harus dibatasi oleh SOURCE ADDRESS LIST. Ini meningkatkan keamanan dengan membatasi akses hanya dari alamat IP tertentu, bukan membuka akses ke seluruh internet.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Contoh aturan Destination NAT dasar</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">dstnat</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">80</span> in-interface=<span class="string">WAN</span> action=<span class="string">dst-nat</span> to-addresses=<span class="string">192.168.0.10</span> to-ports=<span class="string">80</span></div>
+            <div class="code-line comment"># Aturan yang sama dengan pembatasan alamat sumber</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">dstnat</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">80</span> in-interface=<span class="string">WAN</span> src-address=<span class="string">198.51.100.0/24</span> action=<span class="string">dst-nat</span> to-addresses=<span class="string">192.168.0.10</span> to-ports=<span class="string">80</span></div>
+        </div>
+
+        <h3 class="subsection-title">Konfigurasi Port Forwarding untuk Web Server</h3>
+        <p>Dari sumber First Time Configuration (2024), untuk mengkonfigurasi port forwarding ke web server internal, kita perlu membuat aturan DNAT yang mengarahkan lalu lintas dari port tertentu di antarmuka WAN ke server web di jaringan lokal.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Konfigurasi port forwarding untuk HTTP</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">dstnat</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">80</span> in-interface=<span class="string">WAN</span> action=<span class="string">dst-nat</span> to-addresses=<span class="string">192.168.0.10</span> to-ports=<span class="string">80</span> comment=<span class="string">"Web Server - HTTP"</span></div>
+            <div class="code-line comment"># Konfigurasi port forwarding untuk HTTPS</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">dstnat</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">443</span> in-interface=<span class="string">WAN</span> action=<span class="string">dst-nat</span> to-addresses=<span class="string">192.168.0.10</span> to-ports=<span class="string">443</span> comment=<span class="string">"Web Server - HTTPS"</span></div>
+        </div>
+        
+        <p>Dari sumber MikroTik Documentation (2024), ketika pengguna dari luar jaringan membuat koneksi ke server web, router melakukan DST NAT sesuai konfigurasi: klien mengirim paket dengan alamat IP sumber eksternal ke alamat IP tujuan publik router pada port yang dikonfigurasi; router melakukan NAT tujuan ke alamat server internal dan mengganti alamat IP tujuan dalam paket sesuai dengan itu. Alamat IP sumber tetap sama; server membalas permintaan klien dan paket balasan memiliki alamat IP sumber server internal dan alamat IP tujuan eksternal. Router menentukan bahwa paket tersebut adalah bagian dari koneksi sebelumnya dan membatalkan NAT tujuan, serta menempatkan alamat IP tujuan asli ke dalam bidang alamat IP sumber.</p>
+
+        <h3 class="subsection-title">Konfigurasi Port Forwarding untuk Remote Access</h3>
+        <p>Dari sumber Forum MikroTik (2024), untuk akses remote ke perangkat di jaringan lokal, seperti SSH atau Remote Desktop, kita dapat membuat aturan DNAT yang khusus berdasarkan alamat sumber. Ini meningkatkan keamanan dengan hanya mengizinkan akses dari alamat IP tertentu.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Konfigurasi port forwarding untuk SSH dari alamat tertentu</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">dstnat</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">22</span> in-interface=<span class="string">WAN</span> src-address=<span class="string">198.51.100.5</span> action=<span class="string">dst-nat</span> to-addresses=<span class="string">192.168.0.20</span> to-ports=<span class="string">22</span> comment=<span class="string">"SSH dari alamat tertentu"</span></div>
+            <div class="code-line comment"># Konfigurasi port forwarding untuk Remote Desktop (RDP)</div>
+            <div class="code-line"><span class="keyword">/ip firewall nat add</span> chain=<span class="string">dstnat</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">3389</span> in-interface=<span class="string">WAN</span> src-address=<span class="string">198.51.100.0/24</span> action=<span class="string">dst-nat</span> to-addresses=<span class="string">192.168.0.30</span> to-ports=<span class="string">3389</span> comment=<span class="string">"RDP dari jaringan tertentu"</span></div>
+        </div>
+        
+        <div class="tech-alert">
+            <p>Perlu diingat bahwa aturan DNAT hanya melakukan penulisan ulang alamat – Anda juga memerlukan aturan filter yang memungkinkan paket untuk diteruskan. Tambahkan aturan filter yang sesuai di /ip firewall filter untuk mengizinkan lalu lintas yang di-NAT.</p>
+        </div>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Menambahkan aturan filter untuk mengizinkan lalu lintas yang di-NAT</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> protocol=<span class="string">tcp</span> dst-address=<span class="string">192.168.0.10</span> dst-port=<span class="string">80,443</span> action=<span class="string">accept</span> comment=<span class="string">"Allow Web Server"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> protocol=<span class="string">tcp</span> dst-address=<span class="string">192.168.0.20</span> dst-port=<span class="string">22</span> src-address=<span class="string">198.51.100.5</span> action=<span class="string">accept</span> comment=<span class="string">"Allow SSH"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> protocol=<span class="string">tcp</span> dst-address=<span class="string">192.168.0.30</span> dst-port=<span class="string">3389</span> src-address=<span class="string">198.51.100.0/24</span> action=<span class="string">accept</span> comment=<span class="string">"Allow RDP"</span></div>
+        </div>
+        
+        <div class="conclusion-box">
+            <strong>Kesimpulan:</strong> Dari 3 pendapat tersebut dapat disimpulkan bahwa implementasi Destination NAT pada MikroTik memungkinkan akses dari internet ke layanan di jaringan lokal dengan mengarahkan lalu lintas dari port tertentu di antarmuka WAN ke server internal. Untuk keamanan yang lebih baik, aturan DNAT sebaiknya dibatasi berdasarkan alamat sumber dan selalu disertai dengan aturan filter yang sesuai untuk mengizinkan lalu lintas yang di-NAT.
+        </div>
+    </div>
+
+    <!-- Section: Pengamanan Jaringan dengan Firewall Filter -->
+    <div class="section fade-in">
+        <h2 class="section-title">4. PENGAMANAN JARINGAN DENGAN FIREWALL FILTER</h2>
+
+                                                                <div class="image-container">
+          <img src="no  (2).png" alt="PENGAMANAN JARINGAN DENGAN FIREWALL FILTER">
+          <div class="image-caption"> PENGAMANAN JARINGAN DENGAN FIREWALL FILTER</div>
+                                                </div>
+
+                                                                                                        <div class="image-container">
+          <img src="no  (3).png" alt="KONFIGURASI SOURCE NAT UNTUK AKSES INTERNET">
+          <div class="image-caption"> KONFIGURASI SOURCE NAT UNTUK AKSES INTERNET</div>
+                                                </div>
+        
+        <h3 class="subsection-title">Prinsip Dasar Firewall Filter</h3>
+        <p>Dari sumber MikroTik Documentation (2024), firewall di RouterOS mengimplementasikan filtering paket stateful (dengan memanfaatkan pelacakan koneksi) dan stateless, menyediakan fungsi keamanan yang digunakan untuk mengelola aliran data ke, dari, dan melalui router. Bersama dengan Network Address Translation (NAT), firewall berfungsi sebagai alat untuk mencegah akses tidak sah ke jaringan yang terhubung langsung dan router itu sendiri, serta sebagai filter untuk lalu lintas keluar.</p>
+        
+        <p>Dari sumber CLIMB (2025), firewall MikroTik melacak keadaan setiap koneksi, yang memungkinkan Anda membuat keputusan lebih cerdas tentang lalu lintas mana yang harus diizinkan dan mana yang harus diblokir. Prinsip keamanan "Default Deny" sangat penting, yang berarti memblokir semua lalu lintas kecuali yang secara khusus diizinkan. MikroTik sangat cocok untuk menerapkan prinsip ini, memberikan alat untuk membangun fondasi yang aman bagi jaringan Anda.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Melihat semua aturan filter yang ada</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter print</span></div>
+            <div class="code-line">Flags: X - disabled, I - invalid, D - dynamic </div>
+            <div class="code-line"> #   CHAIN  ACTION  SRC-ADDRESS  DST-ADDRESS  PROTOCOL  DST-PORT  COMMENT</div>
+        </div>
+
+        <h3 class="subsection-title">Implementasi Aturan Firewall Dasar</h3>
+        <p>Dari sumber Tech@Layer-x (2025), urutan aturan firewall sangat memengaruhi efektivitasnya, karena MikroTik memproses aturan secara berurutan dari atas ke bawah. Sebaiknya mulai dengan aturan yang mengizinkan koneksi established dan related untuk memastikan lalu lintas kembali diizinkan untuk sesi yang sedang berlangsung.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Menambahkan aturan firewall dasar</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> action=<span class="string">fasttrack-connection</span> connection-state=<span class="string">established,related</span> comment=<span class="string">"Fasttrack untuk koneksi established dan related"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> action=<span class="string">accept</span> connection-state=<span class="string">established,related</span> comment=<span class="string">"Terima koneksi established dan related"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> action=<span class="string">drop</span> connection-state=<span class="string">invalid</span> comment=<span class="string">"Drop paket invalid"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">input</span> action=<span class="string">accept</span> connection-state=<span class="string">established,related</span> comment=<span class="string">"Terima koneksi established dan related ke router"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">input</span> action=<span class="string">drop</span> connection-state=<span class="string">invalid</span> comment=<span class="string">"Drop paket invalid ke router"</span></div>
+        </div>
+        
+        <p>Dari sumber Building Advanced Firewall (2024), penting untuk menambahkan aturan yang mencegah akses langsung dari WAN ke jaringan lokal kecuali untuk koneksi yang di-NAT tujuan. Tanpa aturan ini, jika penyerang mengetahui atau menebak subnet lokal Anda, mereka dapat membuat koneksi langsung ke host lokal.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Menambahkan aturan untuk mencegah akses langsung dari WAN ke LAN</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> action=<span class="string">drop</span> connection-nat-state=<span class="string">!dstnat</span> connection-state=<span class="string">new</span> in-interface=<span class="string">WAN</span> comment=<span class="string">"Drop akses dari WAN ke LAN yang tidak melalui DNAT"</span></div>
+        </div>
+
+        <h3 class="subsection-title">Pengamanan Akses ke Router</h3>
+        <p>Dari sumber First Time Configuration (2024), keamanan router itu sendiri sangat penting. Router yang dapat diakses dari internet rentan terhadap serangan. Beberapa layanan router seperti Winbox, SSH, dan FTP harus dibatasi hanya untuk alamat IP yang tepercaya.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Membuat daftar alamat untuk alamat yang tepercaya</div>
+            <div class="code-line"><span class="keyword">/ip firewall address-list add</span> list=<span class="string">trusted</span> address=<span class="string">192.168.0.0/24</span> comment=<span class="string">"Jaringan lokal"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall address-list add</span> list=<span class="string">trusted</span> address=<span class="string">198.51.100.5</span> comment=<span class="string">"Admin remote"</span></div>
+            <div class="code-line comment"># Menambahkan aturan untuk membatasi akses ke layanan router</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">input</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">8291</span> src-address-list=<span class="string">!trusted</span> action=<span class="string">drop</span> comment=<span class="string">"Drop akses Winbox dari alamat yang tidak tepercaya"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">input</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">22</span> src-address-list=<span class="string">!trusted</span> action=<span class="string">drop</span> comment=<span class="string">"Drop akses SSH dari alamat yang tidak tepercaya"</span></div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">input</span> protocol=<span class="string">tcp</span> dst-port=<span class="string">21</span> src-address-list=<span class="string">!trusted</span> action=<span class="string">drop</span> comment=<span class="string">"Drop akses FTP dari alamat yang tidak tepercaya"</span></div>
+        </div>
+        
+        <p>Dari sumber abcXperts (2024), selalu pertahankan router MikroTik Anda diperbarui dengan versi RouterOS dan firmware terbaru untuk melindungi dari kerentanan yang diketahui. Untuk lalu lintas spesifik aplikasi, Anda dapat mengonfigurasi aturan Layer 7 untuk memblokir atau mengizinkan lalu lintas berdasarkan pola dalam paket data. Ini membatasi akses ke layanan router tertentu hanya untuk rentang alamat IP tertentu, sehingga mengurangi risiko akses tidak sah.</p>
+        
+        <div class="security-alert">
+            <p>Urutan aturan firewall sangat penting! MikroTik memproses aturan berurutan dari atas ke bawah dan berhenti saat menemukan kecocokan. Pastikan aturan yang lebih spesifik berada di atas aturan yang lebih umum. Selalu uji konfigurasi firewall Anda secara menyeluruh setelah melakukan perubahan untuk memastikan akses yang diinginkan tetap berfungsi dan akses yang tidak diinginkan diblokir.</p>
+        </div>
+        
+        <div class="conclusion-box">
+            <strong>Kesimpulan:</strong> Dari 3 pendapat tersebut dapat disimpulkan bahwa pengamanan jaringan dengan firewall filter pada MikroTik melibatkan prinsip "Default Deny" di mana semua lalu lintas diblokir kecuali yang secara khusus diizinkan. Implementasi aturan firewall dasar seperti mengizinkan koneksi established dan related, menolak paket invalid, dan membatasi akses dari WAN ke LAN sangat penting. Pengamanan akses ke router sendiri juga kritis dengan membatasi akses ke layanan router hanya untuk alamat IP yang tepercaya.
+        </div>
+    </div>
+
+    <!-- Section: Optimasi dan Troubleshooting -->
+    <div class="section fade-in">
+        <h2 class="section-title">5. OPTIMASI DAN TROUBLESHOOTING</h2>
+        
+        <h3 class="subsection-title">Teknik Optimasi Kinerja</h3>
+        <p>Dari sumber Tech@Layer-x (2025), FastTrack adalah fitur MikroTik yang memungkinkan koneksi tertentu melewati proses pemeriksaan firewall, secara signifikan mengurangi penggunaan CPU. Ini sangat berguna untuk jaringan dengan volume lalu lintas tinggi. Namun, FastTrack harus digunakan dengan hati-hati dan tidak boleh diterapkan pada semua jenis lalu lintas.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Menggunakan FastTrack untuk koneksi established dan related</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> action=<span class="string">fasttrack-connection</span> connection-state=<span class="string">established,related</span> comment=<span class="string">"Fasttrack untuk koneksi established dan related"</span></div>
+            <div class="code-line comment"># Pindahkan aturan FastTrack ke posisi pertama</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter move</span> 2 destination=<span class="string">0</span></div>
+        </div>
+        
+        <p>Dari sumber MikroTik Documentation (2024), penggunaan tabel RAW firewall dapat menghemat sumber daya jika pelacakan koneksi tidak diperlukan. Ini dapat sangat meningkatkan kinerja pada router dengan lalu lintas tinggi. Namun, perlu diingat bahwa fitur seperti NAT dan pemfilteran stateful tidak akan berfungsi untuk paket yang diproses di tabel RAW.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Contoh penggunaan tabel RAW untuk memblokir lalu lintas berbahaya</div>
+            <div class="code-line"><span class="keyword">/ip firewall raw add</span> chain=<span class="string">prerouting</span> src-address=<span class="string">198.51.100.0/24</span> action=<span class="string">drop</span> comment=<span class="string">"Drop lalu lintas dari jaringan yang diketahui berbahaya"</span></div>
+        </div>
+
+        <h3 class="subsection-title">Teknik Troubleshooting</h3>
+        <p>Dari sumber CLIMB (2025), logging dan pemantauan aturan firewall Anda adalah salah satu hal terpenting yang dapat Anda lakukan untuk mengamankan jaringan Anda. Jika Anda tidak melakukan logging dan memantau aturan firewall Anda, maka Anda tidak memiliki cara untuk mengetahui apakah aturan tersebut berfungsi sebagaimana mestinya. Tanpa visibilitas ini, tidak mungkin memecahkan masalah atau membuat perubahan untuk meningkatkan kinerja.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Mengaktifkan logging untuk aturan tertentu</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter add</span> chain=<span class="string">forward</span> connection-nat-state=<span class="string">!dstnat</span> connection-state=<span class="string">new</span> in-interface=<span class="string">WAN</span> action=<span class="string">drop</span> log=<span class="string">yes</span> log-prefix=<span class="string">"DROP WAN-LAN:"</span> comment=<span class="string">"Log dan drop akses tidak sah dari WAN ke LAN"</span></div>
+            <div class="code-line comment"># Melihat log firewall</div>
+            <div class="code-line"><span class="keyword">/log print</span> where topics~<span class="string">"firewall"</span></div>
+        </div>
+        
+        <p>Dari sumber NeuronVM (2025), sebelum mengubah aturan firewall, sangat penting untuk membuat cadangan pengaturan Anda saat ini sehingga jika terjadi kesalahan, Anda dapat dengan cepat mengembalikan semuanya seperti semula. Hindari kesalahan umum seperti membiarkan port terbuka seperti 8291 (Winbox) ke publik, urutan aturan yang salah, dan tidak melakukan logging lalu lintas yang diblokir.</p>
+        
+        <div class="code-terminal">
+            <div class="code-line comment"># Membuat backup konfigurasi</div>
+            <div class="code-line"><span class="keyword">/system backup save</span> name=<span class="string">before_firewall_changes</span></div>
+            <div class="code-line comment"># Menguji konektivitas setelah perubahan</div>
+            <div class="code-line"><span class="keyword">/ping</span> 8.8.8.8 count=<span class="string">4</span></div>
+            <div class="code-line comment"># Melihat statistik aturan untuk memverifikasi efektivitas</div>
+            <div class="code-line"><span class="keyword">/ip firewall filter print stats</span></div>
+            <div class="code-line">Flags: X - disabled, I - invalid, D - dynamic </div>
+            <div class="code-line"> #   CHAIN  ACTION  PACKETS  BYTES</div>
+            <div class="code-line"> 0   forward fasttrack-connection 12500 1500000</div>
+            <div class="code-line"> 1   forward accept 8700 1200000</div>
+            <div class="code-line"> 2   forward drop 350 28000</div>
+        </div>
+        
+        <div class="tech-alert">
+            <p>Ketika melakukan troubleshooting masalah konektivitas, selalu periksa urutan aturan firewall Anda. Aturan yang terlalu ketat atau salah urutan dapat memblokir lalu lintas yang sah. Gunakan alat seperti /tool torch untuk memantau lalu lintas secara real-time dan /ip firewall connection print untuk melihat koneksi aktif.</p>
+        </div>
+        
+        <div class="conclusion-box">
+            <strong>Kesimpulan:</strong> Dari 3 pendapat tersebut dapat disimpulkan bahwa optimasi dan troubleshooting pada MikroTik melibatkan teknik seperti FastTrack dan penggunaan tabel RAW untuk meningkatkan kinerja, serta logging dan backup untuk memudahkan pemecahan masalah. Penting untuk memantau efektivitas aturan firewall melalui logging dan statistik, dan selalu membuat backup sebelum melakukan perubahan besar pada konfigurasi. Urutan aturan yang tepat dan pengujian menyeluruh setelah perubahan sangat penting untuk memastikan keamanan dan fungsionalitas jaringan.
+        </div>
+    </div>
+
+
+</div>
+
+    <!-- Bibliography -->
+    <div class="bibliography">
+        <h3>DAFTAR PUSTAKA</h3>
+        <ul>
+            <li><strong>MikroTik Documentation.</strong> (2024). <em>NAT - RouterOS</em>. <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/3211299/NAT" target="_blank">https://help.mikrotik.com/docs/spaces/ROS/pages/3211299/NAT</a>. Diakses pada 09 September 2025, pukul 08:15-09:30 WIB.</li>
+            
+            <li><strong>MikroTik Documentation.</strong> (2024). <em>Firewall - RouterOS</em>. <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/250708066/Firewall" target="_blank">https://help.mikrotik.com/docs/spaces/ROS/pages/250708066/Firewall</a>. Diakses pada 09 September 2025, pukul 09:35-10:20 WIB.</li>
+            
+            <li><strong>MikroTik Documentation.</strong> (2024). <em>Building Advanced Firewall</em>. <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328513/Building+Advanced+Firewall" target="_blank">https://help.mikrotik.com/docs/spaces/ROS/pages/328513/Building+Advanced+Firewall</a>. Diakses pada 09 September 2025, pukul 10:25-11:15 WIB.</li>
+            
+            <li><strong>MikroTik Wiki.</strong> (2024). <em>Manual:IP/Firewall/NAT</em>. <a href="https://wiki.mikrotik.com/Manual:IP/Firewall/NAT" target="_blank">https://wiki.mikrotik.com/Manual:IP/Firewall/NAT</a>. Diakses pada 09 September 2025, pukul 11:20-12:00 WIB.</li>
+
+            <li><strong>MikroTik Documentation.</strong> (2024). <em>First Time Configuration</em>. <a href="https://help.mikrotik.com/docs/spaces/ROS/pages/328151/First+Time+Configuration" target="_blank">https://help.mikrotik.com/docs/spaces/ROS/pages/328151/First+Time+Configuration</a>. Diakses pada 09 September 2025, pukul 12:05-12:45 WIB.</li>
+
+            <li><strong>MKController.</strong> (2024). <em>NAT on Mikrotik: How to configure NAT to access the internet</em>. <a href="https://mkcontroller.com/nat-on-mikrotik-how-to-configure-nat-to-access-the-internet/" target="_blank">https://mkcontroller.com/nat-on-mikrotik-how-to-configure-nat-to-access-the-internet/</a>. Diakses pada 09 September 2025, pukul 12:50-13:30 WIB.</li>
+
+            <li><strong>UKHost4U.</strong> (2025). <em>How To: MikroTik Router With NAT And VPN Access (CLI)</em>. <a href="https://www.ukhost4u.com/how-to-setup-a-mikrotik-router-with-nat-and-vpn-access-command-line/" target="_blank">https://www.ukhost4u.com/how-to-setup-a-mikrotik-router-with-nat-and-vpn-access-command-line/</a>. Diakses pada 09 September 2025, pukul 13:35-14:15 WIB.</li>
+
+            <li><strong>Tech@Layer-x.</strong> (2025). <em>Configuring MikroTik Firewall - Best Practices</em>. <a href="https://tech.layer-x.com/configuring-mikrotik-firewall-best-practices/" target="_blank">https://tech.layer-x.com/configuring-mikrotik-firewall-best-practices/</a>. Diakses pada 09 September 2025, pukul 14:20-15:00 WIB.</li>
+
+            <li><strong>CLIMB.</strong> (2025). <em>10 Mikrotik Firewall Rules Best Practices</em>. <a href="https://climbtheladder.com/10-mikrotik-firewall-rules-best-practices/" target="_blank">https://climbtheladder.com/10-mikrotik-firewall-rules-best-practices/</a>. Diakses pada 09 September 2025, pukul 15:05-15:45 WIB.</li>
+
+            <li><strong>NeuronVM.</strong> (2025). <em>Best MikroTik Firewall Rules for Network Security</em>. <a href="https://neuronvm.com/blog/mikrotik-firewall-rules/" target="_blank">https://neuronvm.com/blog/mikrotik-firewall-rules/</a>. Diakses pada 09 September 2025, pukul 15:50-16:30 WIB.</li>
+
+            <li><strong>Forum MikroTik.</strong> (2024). <em>Firewall filter/nat best practices</em>. <a href="https://forum.mikrotik.com/viewtopic.php?t=140051" target="_blank">https://forum.mikrotik.com/viewtopic.php?t=140051</a>. Diakses pada 09 September 2025, pukul 16:35-17:15 WIB.</li>
+
+            <li><strong>abcXperts.</strong> (2024). <em>What are the rules that every MikroTik router should have, in firewall filter, nat, etc.?</em>. <a href="https://www.abcxperts.com/en/docs/What-are-the-rules-that-every-router-should-have-in-firewall-filter-nat-etc./" target="_blank">https://www.abcxperts.com/en/docs/What-are-the-rules-that-every-router-should-have-in-firewall-filter-nat-etc./</a>. Diakses pada 09 September 2025, pukul 17:20-18:00 WIB.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Tech particles animation
+    function createTechParticles() {
+        const particlesContainer = document.getElementById('techParticles');
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    // Scroll progress
+    function updateScrollProgress() {
+        const scrollTop = document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercent = (scrollTop / scrollHeight) * 100;
+        document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+    }
+
+    // Typing effect for code lines
+    function typeText(element, text, speed = 30) {
+        return new Promise(resolve => {
+            element.classList.add('typing');
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML = text.slice(0, i + 1);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.remove('typing');
+                    element.classList.add('typed');
+                    resolve();
+                }
+            }
+            type();
+        });
+    }
+
+    // Animate code blocks with typing effect
+    function animateCodeBlocks() {
+        const codeTerminals = document.querySelectorAll('.code-terminal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const codeLines = entry.target.querySelectorAll('.code-line');
+                    let delay = 0;
+                    
+                    codeLines.forEach((line, index) => {
+                        const originalText = line.innerHTML;
+                        setTimeout(async () => {
+                            await typeText(line, originalText, 20);
+                        }, delay);
+                        delay += 500; // 500ms delay between lines
+                    });
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        codeTerminals.forEach(terminal => {
+            observer.observe(terminal);
+        });
+    }
+
+    // Fade in animation on scroll
+    function animateOnScroll() {
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        fadeElements.forEach(element => {
+            observer.observe(element);
+        });
+    }
+
+    // Code block hover effects
+    function addCodeEffects() {
+        const codeLines = document.querySelectorAll('.code-line');
+        codeLines.forEach(line => {
+            line.addEventListener('mouseenter', () => {
+                if (line.classList.contains('typed')) {
+                    line.style.transform = 'translateX(5px)';
+                    line.style.background = 'rgba(37, 99, 235, 0.1)';
+                }
+            });
+            line.addEventListener('mouseleave', () => {
+                line.style.transform = 'translateX(0)';
+                line.style.background = 'transparent';
+            });
+        });
+    }
+
+    // Section hover effects
+    function addSectionEffects() {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                section.style.transform = 'translateY(-8px)';
+            });
+            section.addEventListener('mouseleave', () => {
+                section.style.transform = 'translateY(0)';
+            });
+        });
+    }
+
+    // Initialize everything
+    document.addEventListener('DOMContentLoaded', () => {
+        createTechParticles();
+        animateOnScroll();
+        animateCodeBlocks();
+        addCodeEffects();
+        addSectionEffects();
+        
+        // Scroll events
+        window.addEventListener('scroll', updateScrollProgress);
+        
+        // Smooth scrolling for better UX
+        document.documentElement.style.scrollBehavior = 'smooth';
+    });
+
+    // Add responsive particle count
+    function adjustParticleCount() {
+        const width = window.innerWidth;
+        const particlesContainer = document.getElementById('techParticles');
+        const currentParticles = particlesContainer.children.length;
+        const targetParticles = width < 768 ? 20 : width < 1200 ? 35 : 50;
+        
+        if (currentParticles !== targetParticles) {
+            particlesContainer.innerHTML = '';
+            for (let i = 0; i < targetParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+    }
+
+    window.addEventListener('resize', adjustParticleCount);
+
+
+
+
+   
+</script>
+</html>
